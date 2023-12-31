@@ -1,0 +1,35 @@
+<div class="flex justify-center items-center mt-16">
+    <div class="flex flex-col justify-between w-1/2 h-[70dvh] border-2 border-solid">
+        <div class="flex flex-col gap-y-3 p-4 overflow-y-auto" id="chatContainer">
+            @for (chat of chats; track chat.id) {
+                <div class="p-2.5 rounded-3xl max-w-96" [ngClass]="chat.type == 0 ? 'self-end bg-slate-700' : 'self-start bg-blue-700'">
+                    <p class="text-sm font-medium" [ngClass]="chat.isError ? 'text-red-900' : 'text-slate-50'">{{ chat.msg }}</p>
+                </div>
+            }
+            @if(isProcessing) {
+                <div class="py-0.5 px-3 rounded-3xl max-w-96 self-end bg-slate-700">
+                    <p class="text-slate-50 text-sm font-medium">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 animate-ping">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM12.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM18.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
+                        </svg>
+                    </p>
+                </div>
+            }
+            @if(typeingText != "") {
+                <div class="p-2.5 rounded-3xl max-w-96 self-end bg-slate-700">
+                    <p class="text-slate-50 text-sm font-medium">{{ typeingText }}</p>
+                </div>
+            }
+        </div>
+        <form (ngSubmit)="submit($event)" autocomplete="off">
+            <div class="flex gap-x-3 border-t">
+                <input type="text" name="query" [(ngModel)]="query" class="w-full outline-none bottom-0 p-3" placeholder="Ask something...">
+                <button type="submit" class="w-8 mr-3" [disabled]="isProcessing">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5" />
+                      </svg>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
