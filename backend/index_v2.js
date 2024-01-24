@@ -1,7 +1,7 @@
 
 import express from "express";
 import cors from "cors";
-import Query from "./query.js";
+import Query from "./query-stream.js";
 
 const app = express();
 app.use(express.json());
@@ -12,20 +12,43 @@ app.get("/", async (req, res) => {
     res.json({ msg: "Welcome to QA" })
 })
 
+const payload = {
+    model: "mistral",
+    messages: []
+}
+
 app.post("/", async (req, res) => {
     console.log(req.body);
-    const { prompt } = req.body;
+    const request = req.body;
+    res.writeHead(200, {
+        'Content-Type': 'application/json',
+        'Transfer-Encoding': 'chunked',
+        'Cache-Control': 'no-cache',
+    });
 
-
-    if (prompt === "") {
+    if (request.prompt === "") {
         res.send("Nothing to reply.");
     } else {
-        const response = await Query(prompt);
-        res.send(response)
-    }
+        payload.messages.push({
+            role: "user",
+            content: request.prompt
+        })
 
+        const answer = await Query(res, request.prompt);;
+
+        payload.messages.push({
+            role: "assistant",
+            content: answer
+        })
+    }
     res.end();
 })
+
+// const test = async () => {
+//     await Query("Tell me a abou diu");
+// }
+
+// test();
 
 
 
