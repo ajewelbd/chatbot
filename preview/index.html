@@ -34,8 +34,8 @@
         bottom: 15px;
         right: 20px;
         flex-direction: column;
-        width: 270px;
-        height: 370px;
+        width: 285px;
+        height: 401px;
         border: 1px solid #e2e8f0;
         border-radius: 5px;
         background-color: #f8fafc;
@@ -198,7 +198,7 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        margin-bottom: 2px;
+        margin-bottom: 4px;
         box-shadow: 0 -3px 3px rgb(201 188 188 / 20%);
         background-color: #f8fafc;
     }
@@ -233,10 +233,28 @@
         width: 23px;
         color: #334155;
     }
+
+    #client-selection {
+        display: flex;
+        flex-direction: column;
+        row-gap: 10px;
+    }
+
+    #client-list {
+        width: 200px;
+        padding: 5px;
+        border: 1px solid #cbd5e1;
+        border-radius: 3px;
+    }
+
+    #client-list:focus {
+        border: 1px solid #cbd5e1;
+        outline: none;
+    }
 </style>
 
 <body>
-    <div id="Client Selection">
+    <div id="client-selection">
         <label for="client-list">Clients:</label>
         <select name="client-list" id="client-list">
         </select>
@@ -286,12 +304,13 @@
         </div>
     </div>
     <script>
+        let selectedClient = "";
         const conversations = document.querySelector("#cb-conversations");
         const minimizeBtn = document.querySelector("#cb-minimize-btn");
         const form = document.querySelector("#cb-query-form");
         const sendBtn = document.querySelector("#cb-send-btn");
-        const containerHeight = 370
-        conversations.style.height = `${containerHeight - 90}px`;
+        const containerHeight = 401
+        conversations.style.height = `${containerHeight - 96}px`;
 
         minimizeBtn.addEventListener("click", (event) => {
             event.preventDefault();
@@ -333,7 +352,7 @@
         form.addEventListener("submit", function (event) {
             event.preventDefault();
 
-            if (this.query.value != "" && !isProcessing) {
+            if (selectedClient != "" && this.query.value != "" && !isProcessing) {
                 isProcessing = true;
                 toggleSendBtnStatus();
                 const msg = {
@@ -355,9 +374,10 @@
             }
         })
 
-        const send = (prompt) => {
+        const send = (question) => {
             const payload = {
-                prompt
+                question,
+                client: selectedClient
             }
 
             try {
@@ -535,18 +555,27 @@
         })
 
         const clientListDropdown = document.querySelector("#client-list");
+
+        clientListDropdown.addEventListener("change", (event) => {
+            selectedClient = event.target.value
+        })
         
 
         const getClientList = async() => {
             const response = await fetch("http://localhost:5000/client-list");
-            const clients = await response.json();
+            const { clients } = await response.json();
 
             clients.forEach(client => {
                 const option = document.createElement("option");
                 option.value = client;
-                option.textContent = value;
+                option.textContent = client;
                 clientListDropdown.appendChild(option);
             })
+
+            if(clients.length) {
+                selectedClient = clients[0];
+                clientListDropdown.value = selectedClient;
+            }
         }
 
         getClientList();

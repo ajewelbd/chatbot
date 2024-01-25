@@ -10,6 +10,7 @@
 # Node
 /backend/node_modules
 /frontend/node_modules
+/preview/node_modules
 /frontend/.angular/
 npm-debug.log
 yarn-error.log
