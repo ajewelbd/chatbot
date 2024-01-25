@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    .input {
+        display: flex;
+        flex-direction: column;
+        row-gap: 10px;
+    }
+
+    #type-list {
+        width: 200px;
+        padding: 5px;
+        border: 1px solid #cbd5e1;
+        border-radius: 3px;
+    }
+
+    #type-list:focus {
+        border: 1px solid #cbd5e1;
+        outline: none;
+    }
+
+    #actions {
+        display: flex;
+        column-gap: 25px;
+    }
+    
+    #statusMsg {
+        /* display: none; */
+    }
+</style>
+
+<body>
+    <form class="input" id="embed-form">
+        <div class="input">
+            <label for="client">Client Name:</label>
+            <input name="client" id="client" placeholder="Client name goes here..."></textarea>
+        </div>
+        <div class="input">
+            <label for="type">Type:</label>
+            <select name="type" id="type">
+                <option value="text">Text</option>
+                <option value="url">Url</option>
+                <option value="file">File</option>
+            </select>
+        </div>
+        <div class="input">
+            <label for="embed-text">Embeding Data:</label>
+            <textarea name="embedText" id="embed-text" rows="50" placeholder="Source goes here..."></textarea>
+        </div>
+        <div id="actions">
+            <button type="submit">Embed</button>
+            <p id="status-msg"></p>
+        </div>
+    </form>
+    <script>
+        const embedForm = document.querySelector("#embed-form");
+        const statusMsg = document.querySelector("#status-msg");
+
+        embedForm.addEventListener("submit", async function (event) {
+            event.preventDefault()
+            console.log()
+
+            if(this.type.value && this.embedText.value) {
+                statusMsg.textContent = "Embedding..."
+                try {
+                    const response = await fetch("http://localhost:5000/embed", {
+                        method: "POST",
+                        body: JSON.stringify({
+                            client: this.client.value,
+                            type: this.type.value,
+                            path: this.embedText.value
+                        }),
+                        headers: {
+                            "Content-Type": "application/json"
+                        }
+                    });
+
+                    statusMsg.textContent = await response.json();
+                } catch(e) {
+                    statusMsg.textContent = "Failed to embed";
+                }
+                
+            }
+        })
+    </script>
+</body>
+
+</html>

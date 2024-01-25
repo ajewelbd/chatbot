@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    #chatbot-btn {
+        position: absolute;
+        bottom: 15px;
+        right: 20px;
+        width: 70px;
+        height: 70px;
+        background-color: #f8fafc;
+        border: 1px solid #bfdbfe;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+    }
+
+    #chatbot-btn svg {
+        width: 50px;
+        height: 50px;
+        color: #2563eb;
+    }
+
+    #cb-container {
+        position: absolute;
+        bottom: 15px;
+        right: 20px;
+        flex-direction: column;
+        width: 285px;
+        height: 401px;
+        border: 1px solid #e2e8f0;
+        border-radius: 5px;
+        background-color: #f8fafc;
+        display: none;
+        font-family: sans-serif;
+        box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+    }
+
+    #cb-brand {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    #cb-brand p {
+        margin: 0;
+        padding: 1px 3px;
+        border-left: 1px solid #e2e8f0;
+        border-bottom: 1px solid #e2e8f0;
+        border-right: 1px solid #e2e8f0;
+        border-bottom-right-radius: 5px;
+        border-bottom-left-radius: 5px;
+        font-size: 10px;
+        color: #0f172a;
+        font-weight: 600;
+    }
+
+    #cb-header {
+        padding: 0 5px 5px;
+        border-bottom: 1px solid #e2e8f0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: #f8fafc;
+    }
+
+    #cb-title-conatiner {
+        display: flex;
+        column-gap: 5px;
+        align-items: center;
+    }
+
+    #cb-title {
+        margin: 0;
+        font-size: 17px;
+        font-weight: 500;
+        color: #1e293b;
+    }
+
+    #cb-title-conatiner svg {
+        height: 21px;
+        width: 21px;
+        color: #1e293b;
+    }
+
+    #cb-minimize-btn {
+        background-color: transparent;
+        border: 1px solid #e2e8f0;
+        cursor: pointer;
+        border-radius: 3px;
+    }
+
+    #cb-minimize-btn svg {
+        width: 15px;
+        height: 15px;
+        display: flex;
+        color: #94a3b8;
+    }
+
+    #cb-box {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 100%;
+    }
+
+    #cb-conversations {
+        display: flex;
+        flex-direction: column;
+        row-gap: 7px;
+        padding: 10px;
+        overflow-y: auto;
+        background-color: #f1f5f9;
+    }
+
+    #cb-conversations::-webkit-scrollbar {
+        width: 7px;
+    }
+
+    #cb-conversations::-webkit-scrollbar-thumb {
+        background-color: #cbd5e1;
+        border-radius: 5px;
+    }
+
+    #cb-conversations::-webkit-scrollbar-thumb:hover {
+        background-color: #64748b;
+    }
+
+    .cb-msg-content {
+        display: flex;
+        align-items: center;
+        padding: 11px;
+        box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+        border-radius: 11px;
+    }
+
+    .cb-avatar {
+        width: 25px;
+        height: 25px;
+        color: #334155;
+    }
+
+    .cb-msg {
+        font-size: 14px;
+        font-weight: 500;
+        margin: 0;
+        color: #334155;
+        word-break: break-word;
+    }
+
+    .cb-msg-left {
+        align-self: start;
+        flex-direction: row-reverse;
+        background-color: #f8fafc;
+        border-bottom-left-radius: 0;
+    }
+
+    .cb-msg-right {
+        align-self: end;
+        background-color: #0f172a;
+        border-bottom-right-radius: 0;
+    }
+
+    .cb-msg-right .cb-msg {
+        align-self: end;
+        color: #f8fafc;
+    }
+
+    [uuid="cb-processing-msg"] div {
+        display: flex;
+    }
+
+    .cb-process-icon {
+        width: 23px;
+        height: 23px;
+        animation: ping 1s cubic-bezier(0, 0, 0.2, 1) infinite;
+        color: #f8fafc;
+    }
+
+    @keyframes ping {
+
+        75%,
+        100% {
+            transform: scale(2);
+            opacity: 0;
+        }
+    }
+
+    #cb-input {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 4px;
+        box-shadow: 0 -3px 3px rgb(201 188 188 / 20%);
+        background-color: #f8fafc;
+    }
+
+    #cb-query {
+        width: 100%;
+        border: none;
+        padding: 7px 5px;
+        color: #334155;
+        font-size: 14px;
+        background-color: inherit;
+    }
+
+    #cb-query::placeholder {
+        color: #94a3b8;
+    }
+
+    #cb-query:focus {
+        outline: none;
+    }
+
+    #cb-send-btn {
+        outline: none;
+        border: none;
+        background: transparent;
+        display: flex;
+        cursor: pointer;
+    }
+
+    #cb-send-btn svg {
+        height: 23px;
+        width: 23px;
+        color: #334155;
+    }
+
+    #client-selection {
+        display: flex;
+        flex-direction: column;
+        row-gap: 10px;
+    }
+
+    #client-list {
+        width: 200px;
+        padding: 5px;
+        border: 1px solid #cbd5e1;
+        border-radius: 3px;
+    }
+
+    #client-list:focus {
+        border: 1px solid #cbd5e1;
+        outline: none;
+    }
+</style>
+
+<body>
+    <div id="client-selection">
+        <label for="client-list">Clients:</label>
+        <select name="client-list" id="client-list">
+        </select>
+    </div>
+    <div id="chatbot-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+            stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round"
+                d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 0 1-.825-.242m9.345-8.334a2.126 2.126 0 0 0-.476-.095 48.64 48.64 0 0 0-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0 0 11.25 3c-2.115 0-4.198.137-6.24.402-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235.577.075 1.157.14 1.74.194V21l4.155-4.155" />
+        </svg>
+    </div>
+    <div id="cb-container">
+        <div id="cb-brand">
+            <p>smartlab</p>
+        </div>
+        <div id="cb-header">
+            <div id="cb-title-conatiner">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 0 1-.825-.242m9.345-8.334a2.126 2.126 0 0 0-.476-.095 48.64 48.64 0 0 0-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0 0 11.25 3c-2.115 0-4.198.137-6.24.402-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235.577.075 1.157.14 1.74.194V21l4.155-4.155" />
+                </svg>
+
+                <p id="cb-title">Chatbot</p>
+            </div>
+            <button id="cb-minimize-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14" />
+                </svg>
+            </button>
+        </div>
+        <div id="cb-box">
+            <div id="cb-conversations"></div>
+            <form id="cb-query-form" autocomplete="off">
+                <div id="cb-input">
+                    <input type="text" name="query" id="cb-query" placeholder="Ask something" />
+                    <button type="submit" id="cb-send-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5" />
+                        </svg>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script>
+        let selectedClient = "";
+        const conversations = document.querySelector("#cb-conversations");
+        const minimizeBtn = document.querySelector("#cb-minimize-btn");
+        const form = document.querySelector("#cb-query-form");
+        const sendBtn = document.querySelector("#cb-send-btn");
+        const containerHeight = 401
+        conversations.style.height = `${containerHeight - 96}px`;
+
+        minimizeBtn.addEventListener("click", (event) => {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+            event.stopPropagation();
+            document.querySelector("#cb-container").style.display = "none";
+        })
+
+        const processingIcon = `
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="cb-process-icon">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM12.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM18.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
+            </svg>
+            `;
+
+        const addMsg = (msg) => {
+            let direction = msg.type == 1 ? "cb-msg-left" : "cb-msg-right";
+
+            const newMsgDiv = document.createElement("div");
+            newMsgDiv.setAttribute("uuid", msg.id);
+            newMsgDiv.classList.add(`cb-msg-content`);
+            newMsgDiv.classList.add(direction);
+
+            if (msg.type == 2) {
+                const processingDiv = document.createElement("div");
+                processingDiv.innerHTML = processingIcon;
+                newMsgDiv.appendChild(processingDiv);
+            } else {
+                const text = document.createElement("p");
+                text.classList.add("cb-msg");
+                text.textContent = msg.text;
+                newMsgDiv.appendChild(text);
+            }
+
+            conversations.appendChild(newMsgDiv);
+        }
+
+        let isProcessing = false;
+
+        form.addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            if (selectedClient != "" && this.query.value != "" && !isProcessing) {
+                isProcessing = true;
+                toggleSendBtnStatus();
+                const msg = {
+                    id: crypto.randomUUID(),
+                    type: 1,
+                    text: this.query.value
+                }
+
+                addMsg(msg)
+                addMsg({
+                    id: "cb-processing-msg",
+                    type: 2
+                })
+                conversations.scrollTop = conversations.scrollHeight;
+
+                send(this.query.value);
+
+                this.query.value = "";
+            }
+        })
+
+        const send = (question) => {
+            const payload = {
+                question,
+                client: selectedClient
+            }
+
+            try {
+                fetch('http://localhost:5000/', {
+                method: "POST",
+                body: JSON.stringify(payload),
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            }).then((response) => {
+                const reader = response.body?.getReader();
+
+                if (reader) {
+                    removeProcessingMsg();
+                    let id = crypto.randomUUID();
+                    addMsg({
+                        id,
+                        type: 0,
+                        text: ""
+                    })
+                    const botMsgNode = document.querySelector(`[uuid="${id}"]`);
+                    const processChunk = ({ done, value }) => {
+                        if (done) {
+                            // Stream has ended
+                            // console.log("done")
+                            isProcessing = false;
+                            toggleSendBtnStatus();
+                            return;
+                        }
+
+                        // Decode the Uint8Array to a string
+                        const textDecoder = new TextDecoder('utf-8');
+
+                        botMsgNode.firstChild.textContent = `${botMsgNode.firstChild.textContent}${textDecoder.decode(value)}`;
+                        conversations.scrollTop = conversations.scrollHeight;
+
+
+                        // Continue to the next chunk
+                        reader.read().then(processChunk);
+                    };
+
+                    // Start reading the stream
+                    reader.read().then(processChunk);
+                }
+            })
+            } catch (error) {
+                removeProcessingMsg();
+                isProcessing = false;
+                toggleSendBtnStatus();
+                addMsg({
+                    id: crypto.randomUUID(),
+                    type: 0,
+                    text: "Internal Error"
+                })
+            }
+        }
+
+        const removeProcessingMsg = () => {
+            const processingDiv = document.querySelector(`[uuid="cb-processing-msg"]`);
+            conversations.removeChild(processingDiv)
+        }
+
+        const toggleSendBtnStatus = () => {
+            if (isProcessing) sendBtn.setAttribute("disabled", true)
+            else sendBtn.removeAttribute("disabled")
+        }
+
+        const chats = [
+            {
+                id: crypto.randomUUID(),
+                type: 0,
+                text: "Hello, how can i help you?"
+            },
+            {
+                id: crypto.randomUUID(),
+                type: 1,
+                text: "Hello, how can i help you?"
+            },
+            {
+                id: crypto.randomUUID(),
+                type: 0,
+                text: "Hello, how can i help you?"
+            },
+            {
+                id: crypto.randomUUID(),
+                type: 1,
+                text: "Hello, how can i help you?"
+            },
+            {
+                id: crypto.randomUUID(),
+                type: 0,
+                text: "Hello, how can i help you?"
+            },
+            {
+                id: crypto.randomUUID(),
+                type: 1,
+                text: "Hello, how can i help you?"
+            },
+            {
+                id: crypto.randomUUID(),
+                type: 0,
+                text: "Hello, how can i help you?"
+            },
+            {
+                id: crypto.randomUUID(),
+                type: 1,
+                text: "Hello, how can i help you?"
+            },
+            {
+                id: crypto.randomUUID(),
+                type: 0,
+                text: "Hello, how can i help you?"
+            },
+            {
+                id: crypto.randomUUID(),
+                type: 1,
+                text: "Hello, how can i help you?"
+            },
+            {
+                id: crypto.randomUUID(),
+                type: 0,
+                text: "Hello, how can i help you?"
+            },
+            {
+                id: crypto.randomUUID(),
+                type: 1,
+                text: "Hello, how can i help you?"
+            },
+            {
+                id: crypto.randomUUID(),
+                type: 0,
+                text: "Hello, how can i help you?"
+            },
+            {
+                id: crypto.randomUUID(),
+                type: 1,
+                text: "Hello, how can i help you?"
+            },
+            {
+                id: crypto.randomUUID(),
+                type: 0,
+                text: "Hello, how can i help you?"
+            },
+            {
+                id: crypto.randomUUID(),
+                type: 1,
+                text: "Hello, how can i help you?"
+            },
+            {
+                id: crypto.randomUUID(),
+                type: 0,
+                text: "Hello, how can i help you?"
+            },
+            {
+                id: crypto.randomUUID(),
+                type: 1,
+                text: "Hello, how can i help you?"
+            },
+            {
+                id: crypto.randomUUID(),
+                type: 0,
+                text: "Hello, how can i help you?"
+            }
+        ];
+
+        // chats.forEach(msg => addMsg(msg));
+    </script>
+    <script>
+        const chatbotBtn = document.querySelector("#chatbot-btn");
+        chatbotBtn.addEventListener("click", (event) => {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+            event.stopPropagation();
+            document.querySelector("#cb-container").style.display = "flex";
+        })
+
+        const clientListDropdown = document.querySelector("#client-list");
+
+        clientListDropdown.addEventListener("change", (event) => {
+            selectedClient = event.target.value
+        })
+        
+
+        const getClientList = async() => {
+            const response = await fetch("http://localhost:5000/client-list");
+            const { clients } = await response.json();
+
+            clients.forEach(client => {
+                const option = document.createElement("option");
+                option.value = client;
+                option.textContent = client;
+                clientListDropdown.appendChild(option);
+            })
+
+            if(clients.length) {
+                selectedClient = clients[0];
+                clientListDropdown.value = selectedClient;
+            }
+        }
+
+        getClientList();
+    </script>
+</body>
+
+</html>

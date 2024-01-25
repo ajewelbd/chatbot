@@ -4,6 +4,7 @@ import cors from "cors";
 import Query from "./query-stream.js";
 import { getClients } from "./client-manage.js";
 import { createVectorStore } from "./embed.js";
+const fs = require('fs').promises;
 
 const app = express();
 app.use(express.json());
@@ -11,7 +12,20 @@ app.use(cors());
 const port = process.env.PORT || 5000;
 
 app.get("/", async (req, res) => {
-    res.json({ msg: "Welcome to QA" })
+    try {
+        // Read the HTML file
+        const htmlContent = await fs.readFile('index.html', 'utf8');
+    
+        // Set the Content-Type header to indicate that you're sending HTML
+        res.setHeader('Content-Type', 'text/html');
+    
+        // Send the HTML content as the response
+        res.send(htmlContent);
+      } catch (error) {
+        // Handle errors, e.g., file not found
+        console.error(`Error reading HTML file: ${error.message}`);
+        res.status(500).send('Internal Server Error');
+      }
 })
 
 app.get("/client-list", async (req, res) => {
@@ -47,6 +61,23 @@ app.post("/embed", async (req, res) => {
         res.send("Embedding successfull")
     }
     res.end();
+})
+
+app.get("/embed", async (req, res) => {
+    try {
+        // Read the HTML file
+        const htmlContent = await fs.readFile('embed.html', 'utf8');
+    
+        // Set the Content-Type header to indicate that you're sending HTML
+        res.setHeader('Content-Type', 'text/html');
+    
+        // Send the HTML content as the response
+        res.send(htmlContent);
+      } catch (error) {
+        // Handle errors, e.g., file not found
+        console.error(`Error reading HTML file: ${error.message}`);
+        res.status(500).send('Internal Server Error');
+      }
 })
 
 // const test = async () => {
