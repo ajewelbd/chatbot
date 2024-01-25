@@ -4,7 +4,7 @@ import cors from "cors";
 import Query from "./query-stream.js";
 import { getClients } from "./client-manage.js";
 import { createVectorStore } from "./embed.js";
-const fs = require('fs').promises;
+import * as fs from "fs/promises";
 
 const app = express();
 app.use(express.json());
@@ -14,7 +14,7 @@ const port = process.env.PORT || 5000;
 app.get("/", async (req, res) => {
     try {
         // Read the HTML file
-        const htmlContent = await fs.readFile('index.html', 'utf8');
+        const htmlContent = await fs.readFile('chatbot.html', 'utf8');
     
         // Set the Content-Type header to indicate that you're sending HTML
         res.setHeader('Content-Type', 'text/html');
