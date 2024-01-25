@@ -2,6 +2,8 @@
 import express from "express";
 import cors from "cors";
 import Query from "./query-stream.js";
+import { getClients } from "./client-manage.js";
+import { createVectorStore } from "./embed.js";
 
 const app = express();
 app.use(express.json());
@@ -12,13 +14,13 @@ app.get("/", async (req, res) => {
     res.json({ msg: "Welcome to QA" })
 })
 
-const payload = {
-    model: "mistral",
-    messages: []
-}
+app.get("/client-list", async (req, res) => {
+    const clients = await getClients();
+    res.json({ clients })
+})
 
 app.post("/", async (req, res) => {
-    console.log(req.body);
+    // console.log(req.body);
     const request = req.body;
     res.writeHead(200, {
         'Content-Type': 'application/json',
@@ -29,17 +31,20 @@ app.post("/", async (req, res) => {
     if (request.prompt === "") {
         res.send("Nothing to reply.");
     } else {
-        payload.messages.push({
-            role: "user",
-            content: request.prompt
-        })
+        await Query(res, request);
+    }
+    res.end();
+})
 
-        const answer = await Query(res, request.prompt);;
+app.post("/embed", async (req, res) => {
+    const request = req.body;
+    // console.log(request);
 
-        payload.messages.push({
-            role: "assistant",
-            content: answer
-        })
+    if (request.path === "") {
+        res.send("Nothing to embed.");
+    } else {
+        await createVectorStore(request);
+        res.send("Embedding successfull")
     }
     res.end();
 })
