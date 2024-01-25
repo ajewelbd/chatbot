@@ -312,6 +312,10 @@
         const containerHeight = 401
         conversations.style.height = `${containerHeight - 96}px`;
 
+        const getgetRandmID = () => {
+            return `${Math.floor(Math.random() * 100000)}${Math.floor(Math.random() * 100000)}${Math.floor(Math.random() * 100000)}`
+        }
+
         minimizeBtn.addEventListener("click", (event) => {
             event.preventDefault();
             event.stopImmediatePropagation();
@@ -356,7 +360,7 @@
                 isProcessing = true;
                 toggleSendBtnStatus();
                 const msg = {
-                    id: crypto.randomUUID(),
+                    id: getRandmID(),
                     type: 1,
                     text: this.query.value
                 }
@@ -381,7 +385,7 @@
             }
 
             try {
-                fetch('/embed', {
+                fetch('/', {
                 method: "POST",
                 body: JSON.stringify(payload),
                 headers: {
@@ -392,7 +396,7 @@
 
                 if (reader) {
                     removeProcessingMsg();
-                    let id = crypto.randomUUID();
+                    let id = getRandmID();
                     addMsg({
                         id,
                         type: 0,
@@ -428,7 +432,7 @@
                 isProcessing = false;
                 toggleSendBtnStatus();
                 addMsg({
-                    id: crypto.randomUUID(),
+                    id: getRandmID(),
                     type: 0,
                     text: "Internal Error"
                 })
@@ -447,97 +451,97 @@
 
         const chats = [
             {
-                id: crypto.randomUUID(),
+                id: getRandmID(),
                 type: 0,
                 text: "Hello, how can i help you?"
             },
             {
-                id: crypto.randomUUID(),
+                id: getRandmID(),
                 type: 1,
                 text: "Hello, how can i help you?"
             },
             {
-                id: crypto.randomUUID(),
+                id: getRandmID(),
                 type: 0,
                 text: "Hello, how can i help you?"
             },
             {
-                id: crypto.randomUUID(),
+                id: getRandmID(),
                 type: 1,
                 text: "Hello, how can i help you?"
             },
             {
-                id: crypto.randomUUID(),
+                id: getRandmID(),
                 type: 0,
                 text: "Hello, how can i help you?"
             },
             {
-                id: crypto.randomUUID(),
+                id: getRandmID(),
                 type: 1,
                 text: "Hello, how can i help you?"
             },
             {
-                id: crypto.randomUUID(),
+                id: getRandmID(),
                 type: 0,
                 text: "Hello, how can i help you?"
             },
             {
-                id: crypto.randomUUID(),
+                id: getRandmID(),
                 type: 1,
                 text: "Hello, how can i help you?"
             },
             {
-                id: crypto.randomUUID(),
+                id: getRandmID(),
                 type: 0,
                 text: "Hello, how can i help you?"
             },
             {
-                id: crypto.randomUUID(),
+                id: getRandmID(),
                 type: 1,
                 text: "Hello, how can i help you?"
             },
             {
-                id: crypto.randomUUID(),
+                id: getRandmID(),
                 type: 0,
                 text: "Hello, how can i help you?"
             },
             {
-                id: crypto.randomUUID(),
+                id: getRandmID(),
                 type: 1,
                 text: "Hello, how can i help you?"
             },
             {
-                id: crypto.randomUUID(),
+                id: getRandmID(),
                 type: 0,
                 text: "Hello, how can i help you?"
             },
             {
-                id: crypto.randomUUID(),
+                id: getRandmID(),
                 type: 1,
                 text: "Hello, how can i help you?"
             },
             {
-                id: crypto.randomUUID(),
+                id: getRandmID(),
                 type: 0,
                 text: "Hello, how can i help you?"
             },
             {
-                id: crypto.randomUUID(),
+                id: getRandmID(),
                 type: 1,
                 text: "Hello, how can i help you?"
             },
             {
-                id: crypto.randomUUID(),
+                id: getRandmID(),
                 type: 0,
                 text: "Hello, how can i help you?"
             },
             {
-                id: crypto.randomUUID(),
+                id: getRandmID(),
                 type: 1,
                 text: "Hello, how can i help you?"
             },
             {
-                id: crypto.randomUUID(),
+                id: getRandmID(),
                 type: 0,
                 text: "Hello, how can i help you?"
             }
