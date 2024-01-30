@@ -10,7 +10,7 @@
     #chatbot-btn {
         position: absolute;
         bottom: 15px;
-        right: 20px;
+        right: 25px;
         width: 70px;
         height: 70px;
         background-color: #f8fafc;
@@ -32,7 +32,7 @@
     #cb-container {
         position: absolute;
         bottom: 15px;
-        right: 20px;
+        right: 25px;
         flex-direction: column;
         width: 285px;
         height: 401px;
@@ -254,11 +254,12 @@
 </style>
 
 <body>
-    <div id="client-selection">
+    <!-- <div id="client-selection">
         <label for="client-list">Clients:</label>
         <select name="client-list" id="client-list">
         </select>
-    </div>
+    </div> -->
+    <iframe src="https://venturabd.com" frameborder="0" style="width: 100%; height: calc(100dvh - 20px);"></iframe>
     <div id="chatbot-btn">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
             stroke="currentColor">
@@ -304,7 +305,7 @@
         </div>
     </div>
     <script>
-        let selectedClient = "";
+        let selectedClient = "Ventura";
         const conversations = document.querySelector("#cb-conversations");
         const minimizeBtn = document.querySelector("#cb-minimize-btn");
         const form = document.querySelector("#cb-query-form");
@@ -312,7 +313,7 @@
         const containerHeight = 401
         conversations.style.height = `${containerHeight - 96}px`;
 
-        const getgetRandmID = () => {
+        const getRandmID = () => {
             return `${Math.floor(Math.random() * 100000)}${Math.floor(Math.random() * 100000)}${Math.floor(Math.random() * 100000)}`
         }
 
@@ -448,106 +449,6 @@
             if (isProcessing) sendBtn.setAttribute("disabled", true)
             else sendBtn.removeAttribute("disabled")
         }
-
-        const chats = [
-            {
-                id: getRandmID(),
-                type: 0,
-                text: "Hello, how can i help you?"
-            },
-            {
-                id: getRandmID(),
-                type: 1,
-                text: "Hello, how can i help you?"
-            },
-            {
-                id: getRandmID(),
-                type: 0,
-                text: "Hello, how can i help you?"
-            },
-            {
-                id: getRandmID(),
-                type: 1,
-                text: "Hello, how can i help you?"
-            },
-            {
-                id: getRandmID(),
-                type: 0,
-                text: "Hello, how can i help you?"
-            },
-            {
-                id: getRandmID(),
-                type: 1,
-                text: "Hello, how can i help you?"
-            },
-            {
-                id: getRandmID(),
-                type: 0,
-                text: "Hello, how can i help you?"
-            },
-            {
-                id: getRandmID(),
-                type: 1,
-                text: "Hello, how can i help you?"
-            },
-            {
-                id: getRandmID(),
-                type: 0,
-                text: "Hello, how can i help you?"
-            },
-            {
-                id: getRandmID(),
-                type: 1,
-                text: "Hello, how can i help you?"
-            },
-            {
-                id: getRandmID(),
-                type: 0,
-                text: "Hello, how can i help you?"
-            },
-            {
-                id: getRandmID(),
-                type: 1,
-                text: "Hello, how can i help you?"
-            },
-            {
-                id: getRandmID(),
-                type: 0,
-                text: "Hello, how can i help you?"
-            },
-            {
-                id: getRandmID(),
-                type: 1,
-                text: "Hello, how can i help you?"
-            },
-            {
-                id: getRandmID(),
-                type: 0,
-                text: "Hello, how can i help you?"
-            },
-            {
-                id: getRandmID(),
-                type: 1,
-                text: "Hello, how can i help you?"
-            },
-            {
-                id: getRandmID(),
-                type: 0,
-                text: "Hello, how can i help you?"
-            },
-            {
-                id: getRandmID(),
-                type: 1,
-                text: "Hello, how can i help you?"
-            },
-            {
-                id: getRandmID(),
-                type: 0,
-                text: "Hello, how can i help you?"
-            }
-        ];
-
-        // chats.forEach(msg => addMsg(msg));
     </script>
     <script>
         const chatbotBtn = document.querySelector("#chatbot-btn");
@@ -558,11 +459,11 @@
             document.querySelector("#cb-container").style.display = "flex";
         })
 
-        const clientListDropdown = document.querySelector("#client-list");
+        // const clientListDropdown = document.querySelector("#client-list");
 
-        clientListDropdown.addEventListener("change", (event) => {
-            selectedClient = event.target.value
-        })
+        // clientListDropdown.addEventListener("change", (event) => {
+        //     selectedClient = event.target.value
+        // })
         
 
         const getClientList = async() => {
@@ -582,7 +483,7 @@
             }
         }
 
-        getClientList();
+        // getClientList();
     </script>
 </body>
 

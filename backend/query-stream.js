@@ -1,4 +1,5 @@
 import { formatDocumentsAsString } from "langchain/util/document";
+import { ChatOpenAI } from "@langchain/openai";
 import { RunnableSequence } from "@langchain/core/runnables";
 import { StringOutputParser } from "@langchain/core/output_parsers";
 import { Ollama } from "@langchain/community/llms/ollama";
@@ -17,13 +18,17 @@ const Query = async (res, payload) => {
     const retriever = vectorStore.asRetriever();
 
     // mistral wrapped by Ollama
-    const model = new Ollama({
-        baseUrl: "http://localhost:11434",
-        model: "mistral",
+    // const model = new Ollama({
+    //     baseUrl: "http://localhost:11434",
+    //     model: "phi",
+    // });
+
+    const model = new ChatOpenAI({
+        openAIApiKey: "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"
     });
 
     const questionPrompt = PromptTemplate.fromTemplate(
-        `You are an AI assistant of ${payload.client}. Use the following pieces of context to answer the question at the end. If you don't know the answer, just say that you don't know, don't try to make up an answer. Keep the answer as concise as possible.
+        `You are an AI assistant of Ventura Properties Ltd. Use the following pieces of context to answer the question at the end. If you don't know the answer, just say that you don't know, don't try to make up an answer. Keep the answer as concise as possible.
       ----------
       CONTEXT: {context}
       ----------
